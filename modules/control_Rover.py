@@ -49,7 +49,7 @@ def configure_PID(control):
 def setPathdelta(path_delta):
     global inputValueSteer
     print("Delta = ",path_delta)
-    inputValueSteer = 5*path_delta
+    inputValueSteer = -15*path_delta
 
 def getMovementSteerAngle():
     return movementSteerAngle
