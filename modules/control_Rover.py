@@ -11,7 +11,7 @@ P_STEER = 100 #0.02 #orgineel 0.01
 I_STEER = 0
 D_STEER = 0
 steerSetpoint = 1500 # in degrees
-angleSetPoint = 30 
+ground_Speed = 1900
 
 steerChannel = 1
 speedChannel = 3
@@ -99,7 +99,7 @@ def control_rover():
         movementSteerAngle = (pidSteer(inputValueSteer) * -1)
         #rover.send_movement_command_XYA(grnd_speed, movementSteerAngle,flight_altitude)
         rover.overrideChannel(int(steerChannel),int(steerSetpoint-movementSteerAngle))#movementSteerAngle))
-        rover.overrideChannel(int(speedChannel),1600)
+        rover.overrideChannel(int(speedChannel),ground_Speed)
         #debug_writer_STEER(movementSteerAngle)
 
 def stop_rover():
