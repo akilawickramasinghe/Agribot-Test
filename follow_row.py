@@ -114,12 +114,13 @@ def holdMission():
     STATE = modeSelector()
 
 def autoMode():
-    while True:
-        print("Auto Mode")
+    print("Auto Mode")
+    control_Rover.setModeauto()
 
 def manualMode():
-    while TRUE:
-        print("Manual Mode")    
+    print("Manual Mode")
+    control_Rover.setModemanual()
+    while     
 
 def modeSelector():
     takeoff()
