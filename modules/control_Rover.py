@@ -114,6 +114,8 @@ def attachment():
     while True:
         time.sleep(2)
         rover.overrideChannel(7,1600)
+        time.sleep(2)
+        rover.overrideChannel(7,1400)
 
 #Induvidual Module Testing
 #connection_string = 'tcp:127.0.0.1:5763'
