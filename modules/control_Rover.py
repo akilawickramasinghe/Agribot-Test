@@ -105,7 +105,15 @@ def control_rover():
 def stop_rover():
     rover.overrideChannel(speedChannel,steerSetpoint)
     rover.overrideChannel(steerChannel,steerSetpoint)
+def setModeauto():
+    rover.autoMode()
+def setModemanual():
+    rover.manualMode()
 
+def attachment():
+    while True:
+        time.sleep(2)
+        rover.overrideChannel(7,1600)
 
 #Induvidual Module Testing
 #connection_string = 'tcp:127.0.0.1:5763'

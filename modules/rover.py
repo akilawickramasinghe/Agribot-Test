@@ -129,6 +129,14 @@ def arm():
 
     print ("ARMED! Let's take OFF")
 
+def autoMode():
+    vehicle.mode = VehicleMode("AUTO")
+
+def manualMode():
+    vehicle.mode = VehicleMode("MANUAL")
+
+
+
 def arm_and_takeoff(aTargetAltitude):
     global vehicle
 

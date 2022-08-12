@@ -1,3 +1,4 @@
+from lib2to3.pytree import Node
 from pickle import TRUE
 from statistics import mode
 import sys, time
@@ -29,14 +30,15 @@ def setup():
         cap = cv2.VideoCapture(0)
 
 setup()
-#PID
 control_Rover.configure_PID(control)
+
+
 
 def readFrames():
     global ret,frame
     ret,frame = cap.read()
     #resizeframe = cv2.resize(frame,(640,480),interpolation = cv2.INTER_AREA)
-    #cv2.imshow('frame', frame)
+    #cv2.imshow('frame', frame) 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         return "holdMission"
     return frame
@@ -78,16 +80,15 @@ def search():
         if keyboard.is_pressed('q'):  # if key 'q' is pressed 
             print("Closing due to manual interruption")
             holdMission() # Closes the loop and program
-        
-        if vision_Rover.detect(readFrames()): #Row Detector: Should return TRUE
-            #while 1:
-            #        print("ROW FOUNDED")
-            print("Row is Founded")
-            tracks = TRUE #Checking if there are rows to follow
-            return "track"
-    #return "hold"
+        currentHeading = control_Rover.rowSearch()
+        while control_Rover.rowSearch() < currentHeading + 60:
+            if vision_Rover.detect(readFrames()): #and control_Rover.rowSearch(): #Row Detector: Should return TRUE
+                print("Row is Founded")
+                tracks = TRUE #Checking if there are rows to follow
+                return "track"
+    return "hold"
     #Debug
-    return "track"
+    #return "track"
 
 def takeoff():
     control_Rover.print_rover_report()
@@ -95,24 +96,50 @@ def takeoff():
     control_Rover.arm_and_takeoff() #start control when Agribot is ready
     #return "search"
     #debug
-    return"track"
+    #return"track"
 
 def hold():
     print("State = Hold -> " + STATE)
     control_Rover.stop_rover()
 
 def holdMission():
-    print("State = Hold Mission -> " + STATE)
+    print("State = Hold Mission")
     control_Rover.disarm()
-    cap.relese()
-    cv2.destroyAllWindows()
-    sys.exit(0)
+    #while TRUE:
+    #    if keyboard.is_pressed('q'):
+    #        print("Closing due to manual interruption")
+            #cap.relese()
+            #cv2.destroyAllWindows()
+    #        sys.exit(0)
+    STATE = modeSelector()
 
+def autoMode():
+    while True:
+        print("Auto Mode")
+
+def manualMode():
+    while TRUE:
+        print("Manual Mode")    
+
+def modeSelector():
+    takeoff()
+    mode = input("Enter Mode Number: \n 1: Guided Mode\n 2:Auto Mode\n 3:Manual Mode\n")
+    #while True:
+    print(mode)
+    mode = int(mode)
+    if mode == 1:
+        return "track"
+    elif mode == 2:
+        return "auto"
+    elif mode == 3:
+        return "manual"
+    else:
+        print("Enter a Valid Mode:")
 
 print("Initialization is completed")
+STATE = modeSelector()
 
 while True:
-
     # main program loop
     """" True or False values depend whether or not
         a PID controller or a P controller will be used  """
@@ -124,8 +151,22 @@ while True:
         control_Rover.set_system_state("search")
         STATE = search()
     elif STATE == "takeoff":
+        control_Rover.set_system_state("takeoff")
         STATE = takeoff()
     elif STATE == "hold":
+        control_Rover.set_system_state("hold")
         STATE = hold()
     elif STATE == "holdMission":
+        control_Rover.set_system_state("holdMission")
         STATE = holdMission()
+    elif STATE == "auto":
+        control_Rover.set_system_state("auto")
+        STATE = autoMode()
+    elif STATE == "manual":
+        control_Rover.set_system_state("manual")
+        STATE = manualMode()
+    elif STATE == "mode":
+        control_Rover.set_system_state("mode")
+        STATE = modeSelector()
+
+
